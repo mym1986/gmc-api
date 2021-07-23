@@ -1,0 +1,85 @@
+plugins {
+	id 'java-library'
+	id 'org.springframework.boot'
+	id 'io.spring.dependency-management'
+	id 'com.ewerk.gradle.plugins.querydsl' version '1.0.10'
+}
+
+
+configurations {
+	querydsl.extendsFrom compileClasspath
+
+	developmentOnly
+	runtimeClasspath {
+		extendsFrom developmentOnly
+	}
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+def querydslSrcDir = 'generated/main/java'
+
+clean {
+	delete querydslSrcDir
+}
+
+querydsl {
+	library = "com.querydsl:querydsl-apt"
+	jpa = true
+	querydslSourcesDir = querydslSrcDir
+}
+
+sourceSets {
+	main {
+		java {
+			srcDirs = ['src/main/java', querydslSrcDir]
+		}
+	}
+}
+
+compileQuerydsl {
+	options.annotationProcessorPath = configurations.querydsl
+}
+
+bootJar {
+	enabled = false
+}
+
+jar {
+	enabled = true
+}
+bootRun{
+	enabled = false
+}
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation "org.springframework.boot:spring-boot-starter-web"
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'junit:junit:4.12'
+    compileOnly 'org.projectlombok:lombok'
+	runtimeOnly 'org.postgresql:postgresql'
+	annotationProcessor 'org.projectlombok:lombok'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	testImplementation('org.springframework.boot:spring-boot-starter-test') {
+		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+	}
+	implementation	'com.querydsl:querydsl-jpa'
+	implementation 	'com.querydsl:querydsl-apt'
+	implementation "javax.validation:validation-api"
+	implementation "com.fasterxml.jackson.core:jackson-databind:${dependencyJacksonDatabind}"
+	implementation  "org.modelmapper:modelmapper:${dependencyModelMapper}"
+
+	// https://mvnrepository.com/artifact/com.madgag.spongycastle/core
+	implementation group: 'com.madgag.spongycastle', name: 'core', version: '1.54.0.0'
+}
+
+
+test {
+	useJUnitPlatform()
+	enabled = false
+
+}

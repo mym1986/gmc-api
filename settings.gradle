@@ -1,0 +1,2 @@
+rootProject.name = 'gmc-api'
+include "gmc-common"

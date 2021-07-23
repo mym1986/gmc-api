@@ -1,0 +1,92 @@
+plugins {
+	id 'org.springframework.boot' version '2.2.6.RELEASE'
+	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+	id 'java'
+}
+
+group = 'com.gmc.gmccoin'
+version = '0.0.1'
+sourceCompatibility = '1.8'
+
+
+configurations {
+	compile.exclude module: "spring-boot-starter-tomcat"
+	querydsl.extendsFrom compileClasspath
+	developmentOnly
+	runtimeClasspath {
+		extendsFrom developmentOnly
+	}
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+bootJar {
+	archivesBaseName="${rootProject.name}"
+	project.version=""
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation project(':gmc-common')
+	implementation "org.springframework.boot:spring-boot-starter-actuator"
+	implementation "org.springframework.boot:spring-boot-starter-undertow"
+	implementation "org.springframework.boot:spring-boot-starter-data-jpa"
+	implementation "org.springframework.boot:spring-boot-starter-web"
+	implementation "org.springframework.boot:spring-boot-starter-thymeleaf"
+	implementation "nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect"
+	implementation  "org.bgee.log4jdbc-log4j2:log4jdbc-log4j2-jdbc4.1:1.16"
+	implementation  'org.postgresql:postgresql'
+	implementation  'com.querydsl:querydsl-jpa'
+	implementation "net.javacrumbs.shedlock:shedlock-spring:4.12.0"
+	implementation "net.javacrumbs.shedlock:shedlock-provider-jdbc-template:4.12.0"
+
+	implementation  "org.modelmapper:modelmapper:${dependencyModelMapper}"
+	compileOnly 'org.projectlombok:lombok'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation('org.springframework.boot:spring-boot-starter-test') {
+		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+	}
+
+	implementation "org.springframework.boot:spring-boot-starter-integration"
+	compile "org.springframework.integration:spring-integration-ip:5.3.0.RELEASE"
+	compile 'me.saro:commons:3.0.3'
+
+	// swagger
+	implementation          "io.springfox:springfox-swagger2:${dependencySwagger}"
+	implementation          "io.springfox:springfox-swagger-ui:${dependencySwagger}"
+	implementation          "io.springfox:springfox-bean-validators:${dependencySwagger}"
+	implementation "com.google.guava:guava:${dependencyGuava}"
+
+	//spring retry
+	implementation "org.springframework.retry:spring-retry:${dependencySpringRetry}"
+
+	implementation   group: "commons-codec", name: "commons-codec", version: "1.11"
+	implementation   group: "org.bouncycastle", name: "bcprov-jdk15on", version: "1.64"
+
+	compile 'org.springframework.boot:spring-boot-starter'
+	compile 'org.springframework.boot:spring-boot-starter-mail'
+	compile fileTree(dir: 'libs', include: '*.jar')
+
+	compile group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1'
+
+	// https://mvnrepository.com/artifact/com.madgag.spongycastle/core
+	implementation group: 'com.madgag.spongycastle', name: 'core', version: '1.54.0.0'
+
+	// https://mvnrepository.com/artifact/org.apache.httpcomponents/httpmime
+	implementation group: 'org.apache.httpcomponents', name: 'httpmime', version: '4.3.1'
+
+
+
+
+
+}
+
+test {
+	useJUnitPlatform()
+	enabled = false
+}
