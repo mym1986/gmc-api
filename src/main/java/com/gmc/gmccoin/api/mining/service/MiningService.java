@@ -8,4 +8,5 @@ public interface MiningService {
     MiningDTO updateMiningStatus(MiningDTO miningDTO);
     MiningDTO getMiningStatus(MiningDTO miningDTO);
     List<MiningDTO> getMiningTop100();
+    List<MiningDTO> getMiningHistory(MiningDTO miningDTO);
 }

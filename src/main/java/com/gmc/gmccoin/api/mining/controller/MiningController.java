@@ -48,4 +48,12 @@ public class MiningController {
                 .data(miningService.getMiningTop100())
                 .build();
     }
+
+    @ApiOperation(value="채굴 내역", response = UserDTO.class)
+    @PostMapping("/getMiningHistory")
+    public Response getMiningHistory(@RequestBody @Valid MiningDTO miningDTO) {
+        return Response.builder()
+                .data(miningService.getMiningHistory(miningDTO))
+                .build();
+    }
 }

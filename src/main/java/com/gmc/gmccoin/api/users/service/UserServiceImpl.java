@@ -46,6 +46,10 @@ public class UserServiceImpl implements UserService{
         if(u != null) {
             throw new ApiException(ErrorCode.NOT_MATCH);
         }
+        User userid = this.userRepo.findByUserId(signDTO.getUserId());
+        if(userid != null) {
+            throw new ApiException(ErrorCode.ID_NOT_MATCH);
+        }
 
         //STEP2. 저장
         User user = User.builder()

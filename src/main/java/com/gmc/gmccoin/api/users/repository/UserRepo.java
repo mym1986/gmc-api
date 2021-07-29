@@ -21,4 +21,6 @@ public interface UserRepo extends JpaRepository<User, Long>, UserRepoEx {
 
 
     List<User> findByRecommenderOrderByCreatedAtDesc(String email);
+
+    User findByUserId(String userId);
 }

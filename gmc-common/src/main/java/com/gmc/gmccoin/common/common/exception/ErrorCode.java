@@ -15,6 +15,7 @@ public enum ErrorCode {
     NOT_MATCH("ER_0100", "이미 가입된 이메일입니다.", HttpServletResponse.SC_INTERNAL_SERVER_ERROR),
     ID_NOT_FOUND("ER_0101", "이메일을 입력해 주십시오.", HttpServletResponse.SC_INTERNAL_SERVER_ERROR),
     PW_NOT_FOUND("ER_0102", "비밀번호가 일치하지 않습니다.", HttpServletResponse.SC_INTERNAL_SERVER_ERROR),
+    ID_NOT_MATCH("ER_0103", "이미 가입된 ID입니다.", HttpServletResponse.SC_INTERNAL_SERVER_ERROR),
     ;
 
     private final String code;

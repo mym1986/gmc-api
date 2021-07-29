@@ -16,9 +16,10 @@ public class MiningDTO implements Serializable {
     private String isComplete; //채굴완료 여부
     private float miningValue; //채굴진행값
     private long todayCount; //오늘 채굴 횟수
+    private float todayAmount;//오늘 채굴량
 
     @Builder
-    public MiningDTO(String email, float amount, float miningAmount,LocalDateTime miningStartDt, String isComplete, float miningValue, long todayCount) {
+    public MiningDTO(String email, float amount, float miningAmount,LocalDateTime miningStartDt, String isComplete, float miningValue, long todayCount, float todayAmount) {
         this.email = email;
         this.amount = amount;
         this.miningAmount = miningAmount;
@@ -26,5 +27,6 @@ public class MiningDTO implements Serializable {
         this.isComplete = isComplete;
         this.miningValue = miningValue;
         this.todayCount = todayCount;
+        this.todayAmount = todayAmount;
     }
 }

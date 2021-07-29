@@ -32,9 +32,11 @@ public class MiningServiceImpl implements MiningService{
         MiningHistory miningHistory = this.mininghistoryRepository.findTop1ByEmailAndIsCompleteOrderByIdDesc(miningDTO.getEmail(), "N");
         Mining mining = this.miningRepository.findByEmail(miningDTO.getEmail());
         long todayCount = this.mininghistoryRepository.selectCountByEmailAndIsComplete(miningDTO.getEmail(), "Y");
+        float todayAmount = this.mininghistoryRepository.selectTodayAmountByEmailAndIsComplete(miningDTO.getEmail(), "Y");
         if(todayCount >= 10) {
             miningDTO.setAmount(mining.getAmount());
             miningDTO.setTodayCount(todayCount);
+            miningDTO.setTodayAmount(todayAmount);
             return miningDTO;
         }
         if(miningHistory == null) {
@@ -43,6 +45,7 @@ public class MiningServiceImpl implements MiningService{
             miningDTO = this.modelMapper.map(this.mininghistoryRepository.save(this.modelMapper.map(miningDTO, MiningHistory.class)), MiningDTO.class);
             miningDTO.setAmount(mining.getAmount());
             miningDTO.setTodayCount(todayCount);
+            miningDTO.setTodayAmount(todayAmount);
             return miningDTO;
         } else {
             Long time = ChronoUnit.SECONDS.between(miningHistory.getMiningStartDt(), LocalDateTime.now());
@@ -57,6 +60,7 @@ public class MiningServiceImpl implements MiningService{
                 miningDTO.setAmount(mining.getAmount());
                 miningDTO = this.modelMapper.map(this.mininghistoryRepository.save(this.modelMapper.map(miningDTO, MiningHistory.class)), MiningDTO.class);
                 miningDTO.setTodayCount(todayCount + 1);
+                miningDTO.setTodayAmount(todayAmount);
                 return miningDTO;
             } else {
                 MiningDTO res = this.modelMapper.map(miningHistory, MiningDTO.class);
@@ -64,6 +68,7 @@ public class MiningServiceImpl implements MiningService{
                 res.setMiningValue(miningValue);
                 res.setAmount(mining.getAmount());
                 res.setTodayCount(todayCount);
+                res.setTodayAmount(todayAmount);
                 return res;
             }
         }
@@ -74,14 +79,17 @@ public class MiningServiceImpl implements MiningService{
         MiningHistory miningHistory = this.mininghistoryRepository.findTop1ByEmailAndIsCompleteOrderByIdDesc(miningDTO.getEmail(), "N");
         Mining mining = this.miningRepository.findByEmail(miningDTO.getEmail());
         Long todayCount = this.mininghistoryRepository.selectCountByEmailAndIsComplete(miningDTO.getEmail(), "Y");
+        float todayAmount = this.mininghistoryRepository.selectTodayAmountByEmailAndIsComplete(miningDTO.getEmail(), "Y");
         if(todayCount >= 10) {
             miningDTO.setAmount(mining.getAmount());
             miningDTO.setTodayCount(todayCount);
+            miningDTO.setTodayAmount(todayAmount);
             return miningDTO;
         }
         if(miningHistory == null) {
             miningDTO.setAmount(mining.getAmount());
             miningDTO.setTodayCount(todayCount);
+            miningDTO.setTodayAmount(todayAmount);
             return miningDTO;
         } else {
             Long time = ChronoUnit.SECONDS.between(miningHistory.getMiningStartDt(), LocalDateTime.now());
@@ -93,6 +101,7 @@ public class MiningServiceImpl implements MiningService{
                 miningDTO.setAmount(mining.getAmount());
                 this.miningRepository.save(mining);
                 miningDTO.setTodayCount(todayCount + 1);
+                miningDTO.setTodayAmount(todayAmount);
                 return miningDTO;
             } else {
                 MiningDTO res = this.modelMapper.map(miningHistory, MiningDTO.class);
@@ -100,6 +109,7 @@ public class MiningServiceImpl implements MiningService{
                 res.setMiningValue(miningValue);
                 res.setAmount(mining.getAmount());
                 res.setTodayCount(todayCount);
+                res.setTodayAmount(todayAmount);
                 return res;
             }
         }
@@ -109,6 +119,12 @@ public class MiningServiceImpl implements MiningService{
     public List<MiningDTO> getMiningTop100() {
         List<Mining> miningList = this.miningRepository.findTop100ByOrderByAmountDesc();
         return miningList.stream().map(mining -> this.modelMapper.map(mining, MiningDTO.class)).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<MiningDTO> getMiningHistory(MiningDTO miningDTO) {
+        List<MiningHistory> miningHisList = this.mininghistoryRepository.findByEmailAndIsCompleteOrderByUpdatedAtDesc(miningDTO.getEmail(), "Y");
+        return miningHisList.stream().map(mining -> this.modelMapper.map(miningHisList, MiningDTO.class)).collect(Collectors.toList());
     }
 
 
