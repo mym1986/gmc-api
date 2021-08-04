@@ -26,7 +26,7 @@ public interface MininghistoryRepository extends JpaRepository<MiningHistory, Lo
     void delete(@Param("id")Long id);
 
     @Query(value = "select count(*) from tb_mining_history t where t.email = :email and t.is_complete = :isComplete " +
-            "and to_char(t.mining_start_dt, 'YYYY-MM-DD') = to_char(CURRENT_DATE, 'YYYY-MM-DD')", nativeQuery = true)
+            "and to_char(t.mining_start_dt, 'YYYY-MM-DD') = to_char(CURRENT_DATE, 'YYYY-MM-DD') and is_mining = 'Y'", nativeQuery = true)
     Long selectCountByEmailAndIsComplete(@Param("email")String email, @Param("isComplete")String isComplete);
 
     @Query(value = "select SUM(t.mining_amount) from tb_mining_history t where t.email = :email and t.is_complete = :isComplete " +

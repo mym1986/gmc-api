@@ -18,7 +18,7 @@ import java.util.Collections;
 @Configuration
 @EnableSwagger2
 @Controller
-@Profile({"local","dev"})
+@Profile({"local","prod"})
 public class SwaggerConfig {
     @GetMapping("/")
     public String index() {
