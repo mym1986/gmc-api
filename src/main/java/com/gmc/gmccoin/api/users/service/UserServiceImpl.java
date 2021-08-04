@@ -1,6 +1,7 @@
 package com.gmc.gmccoin.api.users.service;
 
 import com.gmc.gmccoin.api.mining.repository.MiningRepository;
+import com.gmc.gmccoin.api.mining.repository.MininghistoryRepository;
 import com.gmc.gmccoin.api.users.dto.SignDTO;
 import com.gmc.gmccoin.api.users.repository.UserRepo;
 import com.gmc.gmccoin.api.util.AES256Util;
@@ -8,6 +9,7 @@ import com.gmc.gmccoin.common.common.exception.ApiException;
 import com.gmc.gmccoin.common.common.exception.ErrorCode;
 import com.gmc.gmccoin.common.dto.users.UserDTO;
 import com.gmc.gmccoin.common.model.mining.Mining;
+import com.gmc.gmccoin.common.model.mining.MiningHistory;
 import com.gmc.gmccoin.common.model.users.User;
 import com.google.common.hash.Hashing;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +20,9 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
+import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,6 +38,7 @@ public class UserServiceImpl implements UserService{
     private final UserRepo userRepo;
     private final ModelMapper modelMapper;
     private final MiningRepository miningRepository;
+    private final MininghistoryRepository mininghistoryRepository;
 
     @Value("${cookie.maxAge}")
     private String maxAge;
@@ -63,7 +68,51 @@ public class UserServiceImpl implements UserService{
                 .userId(signDTO.getUserId())
                 .build();
 
-        miningRepository.save(Mining.builder().email(signDTO.getEmail()).amount(0L).build());
+        boolean isRecommender = false;
+        float amout = 5L;
+
+        //추천인 + 가입자 에게 5개 지급
+        if(!user.getRecommender().equals("")) {
+            Mining recommenderMining = this.miningRepository.findByEmail(this.userRepo.findByUserId(user.getRecommender()).getEmail());
+            if(recommenderMining != null) {
+                this.mininghistoryRepository.save(MiningHistory.builder()
+                        .email(recommenderMining.getEmail())
+                        .isComplete("Y")
+                        .isMining("N")
+                        .miningAmount(5L)
+                        .miningStartDt(LocalDateTime.now())
+                        .build());
+                recommenderMining.setAmount(new BigDecimal(recommenderMining.getAmount()).add(new BigDecimal(5)).floatValue());
+                this.miningRepository.save(recommenderMining);
+                isRecommender = true;
+            }
+        }
+        this.mininghistoryRepository.save(MiningHistory.builder()
+                .email(signDTO.getEmail())
+                .isComplete("Y")
+                .isMining("N")
+                .miningAmount(5L)
+                .miningStartDt(LocalDateTime.now())
+                .build());
+        Mining mining = this.miningRepository.findByEmail(signDTO.getEmail());
+//        if(isRecommender) {
+//            this.mininghistoryRepository.save(MiningHistory.builder()
+//                    .email(signDTO.getEmail())
+//                    .isComplete("Y")
+//                    .isMining("N")
+//                    .miningAmount(5L)
+//                    .miningStartDt(LocalDateTime.now())
+//                    .build());
+//            mining = this.miningRepository.findByEmail(signDTO.getEmail());
+//            amout = 10L;
+//        }
+
+        if(mining == null) {
+            mining = Mining.builder().email(signDTO.getEmail()).amount(amout).build();
+        } else {
+            mining.setAmount(new BigDecimal(mining.getAmount()).add(new BigDecimal(10)).floatValue());
+        }
+        miningRepository.save(mining);
 
         UserDTO savedUser = this.modelMapper.map(userRepo.save(user), UserDTO.class);
 
