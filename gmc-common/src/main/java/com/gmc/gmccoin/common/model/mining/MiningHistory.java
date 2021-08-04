@@ -24,13 +24,15 @@ public class MiningHistory extends Auditing implements Serializable {
     private float miningAmount;
     private LocalDateTime miningStartDt;
     private String isComplete;
+    private String isMining;
 
     @Builder
-    public MiningHistory(String email, float miningAmount,LocalDateTime miningStartDt, String isComplete) {
+    public MiningHistory(String email, float miningAmount,LocalDateTime miningStartDt, String isComplete, String isMining) {
         this.email = email;
         this.miningAmount = miningAmount;
         this.miningStartDt = miningStartDt;
         this.isComplete = isComplete;
+        this.isMining = isMining;
 
     }
 }

@@ -34,4 +34,10 @@ public interface MininghistoryRepository extends JpaRepository<MiningHistory, Lo
     float selectTodayAmountByEmailAndIsComplete(@Param("email")String email, @Param("isComplete")String isComplete);
 
     List<MiningHistory> findByEmailAndIsCompleteOrderByUpdatedAtDesc(String email, String isComplete);
+
+    @Query(value = "select coalesce(SUM(t.mining_amount), 0) from tb_mining_history t where t.email = :email and t.is_complete = :isComplete " +
+            "and t.is_mining = :isMining", nativeQuery = true)
+    float selectTodayAmountByEmailAndIsCompleteAndIsMining(@Param("email")String email, @Param("isComplete")String isComplete, @Param("isMining")String isMining);
+
+    List<MiningHistory> findByEmailAndIsCompleteAndIsMiningOrderByUpdatedAtDesc(String email, String isComplete, String isMining);
 }
