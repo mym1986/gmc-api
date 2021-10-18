@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: gmccoin-api
+  profiles:
+    active: local
+    include:
+      - schedule
+
+
+  devtools:
+    liveload:
+      enabled: true

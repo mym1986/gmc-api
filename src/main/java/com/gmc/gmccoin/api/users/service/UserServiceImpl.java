@@ -51,10 +51,10 @@ public class UserServiceImpl implements UserService{
         if(u != null) {
             throw new ApiException(ErrorCode.NOT_MATCH);
         }
-        User userid = this.userRepo.findByUserId(signDTO.getUserId());
-        if(userid != null) {
-            throw new ApiException(ErrorCode.ID_NOT_MATCH);
-        }
+//        User userid = this.userRepo.findByUserId(signDTO.getUserId());
+//        if(userid != null) {
+//            throw new ApiException(ErrorCode.ID_NOT_MATCH);
+//        }
 
         //STEP2. 저장
         User user = User.builder()
@@ -63,56 +63,56 @@ public class UserServiceImpl implements UserService{
                     .hashString(signDTO.getPassword(), StandardCharsets.UTF_8)
                     .toString())
                 .phone(signDTO.getPhone())
-                .pin(signDTO.getPin())
+//                .pin(signDTO.getPin())
                 .recommender(signDTO.getRecommender())
-                .userId(signDTO.getUserId())
+//                .userId(signDTO.getUserId())
                 .build();
 
-        boolean isRecommender = false;
-        float amout = 5L;
-
-        //추천인 + 가입자 에게 5개 지급
-        if(!user.getRecommender().equals("")) {
-            Mining recommenderMining = this.miningRepository.findByEmail(this.userRepo.findByUserId(user.getRecommender()).getEmail());
-            if(recommenderMining != null) {
-                this.mininghistoryRepository.save(MiningHistory.builder()
-                        .email(recommenderMining.getEmail())
-                        .isComplete("Y")
-                        .isMining("N")
-                        .miningAmount(5L)
-                        .miningStartDt(LocalDateTime.now())
-                        .build());
-                recommenderMining.setAmount(new BigDecimal(recommenderMining.getAmount()).add(new BigDecimal(5)).floatValue());
-                this.miningRepository.save(recommenderMining);
-                isRecommender = true;
-            }
-        }
-        this.mininghistoryRepository.save(MiningHistory.builder()
-                .email(signDTO.getEmail())
-                .isComplete("Y")
-                .isMining("N")
-                .miningAmount(5L)
-                .miningStartDt(LocalDateTime.now())
-                .build());
-        Mining mining = this.miningRepository.findByEmail(signDTO.getEmail());
-//        if(isRecommender) {
-//            this.mininghistoryRepository.save(MiningHistory.builder()
-//                    .email(signDTO.getEmail())
-//                    .isComplete("Y")
-//                    .isMining("N")
-//                    .miningAmount(5L)
-//                    .miningStartDt(LocalDateTime.now())
-//                    .build());
-//            mining = this.miningRepository.findByEmail(signDTO.getEmail());
-//            amout = 10L;
+//        boolean isRecommender = false;
+//        float amout = 5L;
+//
+//        //추천인 + 가입자 에게 5개 지급
+//        if(!user.getRecommender().equals("")) {
+//            Mining recommenderMining = this.miningRepository.findByEmail(this.userRepo.findByUserId(user.getRecommender()).getEmail());
+//            if(recommenderMining != null) {
+//                this.mininghistoryRepository.save(MiningHistory.builder()
+//                        .email(recommenderMining.getEmail())
+//                        .isComplete("Y")
+//                        .isMining("N")
+//                        .miningAmount(5L)
+//                        .miningStartDt(LocalDateTime.now())
+//                        .build());
+//                recommenderMining.setAmount(new BigDecimal(recommenderMining.getAmount()).add(new BigDecimal(5)).floatValue());
+//                this.miningRepository.save(recommenderMining);
+//                isRecommender = true;
+//            }
 //        }
-
-        if(mining == null) {
-            mining = Mining.builder().email(signDTO.getEmail()).amount(amout).build();
-        } else {
-            mining.setAmount(new BigDecimal(mining.getAmount()).add(new BigDecimal(10)).floatValue());
-        }
-        miningRepository.save(mining);
+//        this.mininghistoryRepository.save(MiningHistory.builder()
+//                .email(signDTO.getEmail())
+//                .isComplete("Y")
+//                .isMining("N")
+//                .miningAmount(5L)
+//                .miningStartDt(LocalDateTime.now())
+//                .build());
+//        Mining mining = this.miningRepository.findByEmail(signDTO.getEmail());
+////        if(isRecommender) {
+////            this.mininghistoryRepository.save(MiningHistory.builder()
+////                    .email(signDTO.getEmail())
+////                    .isComplete("Y")
+////                    .isMining("N")
+////                    .miningAmount(5L)
+////                    .miningStartDt(LocalDateTime.now())
+////                    .build());
+////            mining = this.miningRepository.findByEmail(signDTO.getEmail());
+////            amout = 10L;
+////        }
+//
+//        if(mining == null) {
+//            mining = Mining.builder().email(signDTO.getEmail()).amount(amout).build();
+//        } else {
+//            mining.setAmount(new BigDecimal(mining.getAmount()).add(new BigDecimal(10)).floatValue());
+//        }
+//        miningRepository.save(mining);
 
         UserDTO savedUser = this.modelMapper.map(userRepo.save(user), UserDTO.class);
 

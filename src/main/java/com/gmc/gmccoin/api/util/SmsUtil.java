@@ -33,7 +33,7 @@ public class SmsUtil {
         return headers;
     }
 
-    public void sendSms() {
+    public void sendSms(String phone) {
         try {
 
             String sms_url = "https://apis.aligo.in/send/"; // 전송요청 URL
@@ -74,8 +74,8 @@ public class SmsUtil {
             /******************** 인증정보 ********************/
 
             /******************** 전송정보 ********************/
-            sms.put("msg", "%고객명%님. 안녕하세요. API TEST SEND"); // 메세지 내용
-            sms.put("receiver", "01055092715"); // 수신번호
+            sms.put("msg", "Certification Number"); // 메세지 내용
+            sms.put("receiver", phone); // 수신번호
 //            sms.put("destination", "01111111111|담당자,01111111112|홍길동"); // 수신인 %고객명% 치환
             sms.put("sender", "01072038008"); // 발신번호
 //            sms.put("rdate", ""); // 예약일자 - 20161004 : 2016-10-04일기준
@@ -88,8 +88,8 @@ public class SmsUtil {
             HttpPost post = new HttpPost(sms_url);
             StringBody user_id = new StringBody("ltj1975", ContentType.MULTIPART_FORM_DATA);
             StringBody key = new StringBody("1uhsi2xwt6f8s7c3mjptiot25ltvch4p", ContentType.MULTIPART_FORM_DATA);
-            StringBody msg = new StringBody("%고객명%님. 안녕하세요. API TEST SEND", ContentType.MULTIPART_FORM_DATA);
-            StringBody receiver = new StringBody("01055092715", ContentType.MULTIPART_FORM_DATA);
+            StringBody msg = new StringBody("Certification Number : 1234", ContentType.MULTIPART_FORM_DATA);
+            StringBody receiver = new StringBody(phone, ContentType.MULTIPART_FORM_DATA);
             StringBody sender = new StringBody("01072038008", ContentType.MULTIPART_FORM_DATA);
 //
             MultipartEntityBuilder builder = MultipartEntityBuilder.create();

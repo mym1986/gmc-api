@@ -1,5 +1,7 @@
 package com.gmc.gmccoin.api.users.dto;
 
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import lombok.*;
 
 import javax.validation.constraints.Email;
@@ -24,7 +26,7 @@ public class SignDTO implements Serializable {
 
     @Builder
     public SignDTO(@Email(message = "invalid email.") String email,
-                   @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)[a-zA-Z\\d]{8,}$", message = "Invalid password.") String password,
+                   /*@Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)[a-zA-Z\\d]{8,}$", message = "Invalid password.") */String password,
                    String confirmPassword, String phone,String oldPassword, String pin, String recommender, String userId) {
         this.email = email;
         this.password = password;

@@ -1,0 +1,155 @@
+spring:
+    profiles: 
+        active: prod
+
+---
+spring:
+    profiles: local
+
+    datasource:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+        username: gmccoin
+        password: gmccoin!!
+        url: jdbc:log4jdbc:postgresql://localhost:5432/gmccoin?currentSchema=public
+        hikari:
+            driver-class-name: ${spring.datasource.driver-class-name}
+            jdbc-url: ${spring.datasource.url}
+            username: ${spring.datasource.username}
+            password: ${spring.datasource.password}
+            connection-timeout: 10000
+            minimum-idle: 2
+            maximum-pool-size: 10
+            max-lifetime: 3597000
+            pool-name: gmccoin-${spring.profiles.active}-pool
+            data-source-properties:
+                cache-prep-stmts: "true"
+                prep-stmt-cache-size: "250"
+                prep-stmt-cache-sql-limit: "2048"
+                use-server-prep-stmts: "true"
+                use-local-session-state: "true"
+                rewrite-batched-statements: "true"
+                cache-result-set-metadata: "true"
+                cache-server-configuration: "true"
+                elide-set-auto-commits: "true"
+                maintain-time-stats: "false"
+    jpa:
+        properties:
+            hibernate.show-sql: true
+            hibernate.format_sql: true
+            hibernate.use_sql_comments: true
+            hibernate.jdbc.lob.non_contextual_creation: true
+            hibernate.jdbc.diralect: org.hibernate.dialect.PostgreSQL95Dialect
+        hibernate:
+            # ddl-auto 설정
+            # none: 기본 값이며 아무 일도 일어나지 않는다.
+            # create: 데이터베이스를 drop 한 후, 데이터베이스를 새로 생성한다.
+            # create-drop: SessionFactory가 시작될 때 스키마를 drop하고 재생성하며, SessionFactory가 종료될 때도 스키마를 drop 한다.
+            # validate: 데이터베이스 스키마를 검증 한다.
+            # update: 데이터베이스 스키마를 갱신 한다.
+            ddl-auto: create
+        open-in-view: true
+        database-platform: org.hibernate.dialect.PostgreSQL95Dialect
+        database: postgresql
+
+logging:
+    path: ./log
+    pattern:
+        console: ${CONSOLE_LOG_PATTERN:%clr(%d{${LOG_DATEFORMAT_PATTERN:yyyy-MM-dd HH:mm:ss.SSS}}){faint} %clr(${LOG_LEVEL_PATTERN:%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m (%file:%line\) %n${LOG_EXCEPTION_CONVERSION_WORD:%wEx}}
+        file:  ${CONSOLE_LOG_PATTERN:%clr(%d{${LOG_DATEFORMAT_PATTERN:yyyy-MM-dd HH:mm:ss.SSS}}){faint} %clr(${LOG_LEVEL_PATTERN:%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m (%file:%line\) %n${LOG_EXCEPTION_CONVERSION_WORD:%wEx}}
+    level:
+        ROOT: INFO
+        com.gmc.gmccoin: DEBUG
+        org.springframework.boot: INFO
+        org.springframework.web: DEBUG
+        org.hibernate.SQL: DEBUG
+        org.hibernate.type.descriptor.sql: TRACE
+        jdbc.resultset: ERROR
+
+server:
+    port: 18001
+    servlet:
+        context-path: /api/v1
+
+cookie:
+    maxAge: 86400
+
+tronapi:
+    url: https://api.shasta.trongrid.io
+    assetId: 1000868
+
+---
+spring:
+    profiles: prod
+
+    datasource:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+        username: gmccoin
+        password: gmccoin!!
+        url: jdbc:log4jdbc:postgresql://183.111.67.189:5432/gmccoin?currentSchema=public
+        hikari:
+            driver-class-name: ${spring.datasource.driver-class-name}
+            jdbc-url: ${spring.datasource.url}
+            username: ${spring.datasource.username}
+            password: ${spring.datasource.password}
+            connection-timeout: 10000
+            minimum-idle: 2
+            maximum-pool-size: 10
+            max-lifetime: 3597000
+            pool-name: gmccoin-${spring.profiles.active}-pool
+            data-source-properties:
+                cache-prep-stmts: "true"
+                prep-stmt-cache-size: "250"
+                prep-stmt-cache-sql-limit: "2048"
+                use-server-prep-stmts: "true"
+                use-local-session-state: "true"
+                rewrite-batched-statements: "true"
+                cache-result-set-metadata: "true"
+                cache-server-configuration: "true"
+                elide-set-auto-commits: "true"
+                maintain-time-stats: "false"
+    jpa:
+        properties:
+            hibernate.show-sql: true
+            hibernate.format_sql: true
+            hibernate.use_sql_comments: true
+            hibernate.jdbc.lob.non_contextual_creation: true
+            hibernate.jdbc.diralect: org.hibernate.dialect.PostgreSQL95Dialect
+        hibernate:
+            # ddl-auto 설정
+            # none: 기본 값이며 아무 일도 일어나지 않는다.
+            # create: 데이터베이스를 drop 한 후, 데이터베이스를 새로 생성한다.
+            # create-drop: SessionFactory가 시작될 때 스키마를 drop하고 재생성하며, SessionFactory가 종료될 때도 스키마를 drop 한다.
+            # validate: 데이터베이스 스키마를 검증 한다.
+            # update: 데이터베이스 스키마를 갱신 한다.
+            ddl-auto: update
+        open-in-view: true
+        database-platform: org.hibernate.dialect.PostgreSQL95Dialect
+        database: postgresql
+
+logging:
+    path: ./log
+    pattern:
+        console: ${CONSOLE_LOG_PATTERN:%clr(%d{${LOG_DATEFORMAT_PATTERN:yyyy-MM-dd HH:mm:ss.SSS}}){faint} %clr(${LOG_LEVEL_PATTERN:%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m (%file:%line\) %n${LOG_EXCEPTION_CONVERSION_WORD:%wEx}}
+        file: ${CONSOLE_LOG_PATTERN:%clr(%d{${LOG_DATEFORMAT_PATTERN:yyyy-MM-dd HH:mm:ss.SSS}}){faint} %clr(${LOG_LEVEL_PATTERN:%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m (%file:%line\) %n${LOG_EXCEPTION_CONVERSION_WORD:%wEx}}
+    level:
+        ROOT: INFO
+        com.gmc.gmccoin: DEBUG
+        org.springframework.boot: INFO
+        org.springframework.web: DEBUG
+        org.hibernate.SQL: DEBUG
+        org.hibernate.type.descriptor.sql: TRACE
+        jdbc.resultset: ERROR
+
+server:
+    port: 18001
+    servlet:
+        context-path: /api/v1
+
+cookie:
+    maxAge: 86400
+
+tronapi:
+    url: https://api.shasta.trongrid.io
+    assetId: 1000868
